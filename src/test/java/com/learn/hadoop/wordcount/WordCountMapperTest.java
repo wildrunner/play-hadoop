@@ -2,7 +2,6 @@ package com.learn.hadoop.wordcount;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;

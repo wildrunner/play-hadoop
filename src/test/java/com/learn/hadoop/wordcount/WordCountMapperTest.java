@@ -32,7 +32,7 @@ public class WordCountMapperTest {
         reduceDriver = ReduceDriver.newReduceDriver(reducer);
         mapReduceDriver = MapReduceDriver.newMapReduceDriver(mapper, reducer);
 
-        ClassPathResource resource = new ClassPathResource("input.txt");
+        ClassPathResource resource = new ClassPathResource("wordcount/input.txt");
         File file = resource.getFile();
         String testInputText = Files.toString(file, Charsets.UTF_8);
         this.testInputText = testInputText.replaceAll(System.getProperty("line.separator"), " ");

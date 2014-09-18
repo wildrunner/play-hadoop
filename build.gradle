@@ -17,6 +17,5 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'org.apache.mrunit', name: 'mrunit', version: '1.1.0', classifier: 'hadoop2'
-
-
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
 }

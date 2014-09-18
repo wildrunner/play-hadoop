@@ -2,8 +2,6 @@ package com.learn.hadoop.maxtemperature;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import com.learn.hadoop.wordcount.WordCountMapper;
-import com.learn.hadoop.wordcount.WordCountReducer;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -15,11 +13,12 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class MaxTemperatureMapperTest {
 
@@ -64,5 +63,29 @@ public class MaxTemperatureMapperTest {
 
 
         mapReduceDriver.runTest();
+    }
+
+    @Test
+    public void processesValidRecord() throws IOException, InterruptedException {
+        MaxTemperatureMapper mapper = new MaxTemperatureMapper();
+        Text value = new Text("0043011990999991950051518004+68750+023550FM-12+0382" +
+                "99999V0203201N00261220001CN9999999N9-00111+99999999999");
+        MaxTemperatureMapper.Context context = mock(MaxTemperatureMapper.Context.class);
+        mapper.map(null, value, context);
+
+        verify(context).write(new Text("1950"), new IntWritable(-11));
+    }
+
+    @Test
+    public void returnsMaximumIntegerInValues() throws IOException, InterruptedException {
+        MaxTemperatureReducer reducer = new MaxTemperatureReducer();
+
+        Text key = new Text("1950");
+        List<IntWritable> values = Arrays.asList(new IntWritable(10), new IntWritable(5));
+        MaxTemperatureReducer.Context context = mock(MaxTemperatureReducer.Context.class);
+
+        reducer.reduce(key, values, context);
+        verify(context).write(key, new IntWritable(10));
+
     }
 }

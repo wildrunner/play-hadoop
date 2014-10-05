@@ -1,4 +1,4 @@
-package com.learn.hadoop.departure;
+package com.learn.hadoop.delay;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;

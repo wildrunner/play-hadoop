@@ -3,19 +3,50 @@ apply plugin: 'java'
 sourceCompatibility = 1.8
 version = '1.0'
 
+configurations {
+    ftpAntTask
+}
+
 repositories {
-    mavenLocal()
     mavenCentral()
+    mavenLocal()
+
 }
 
 dependencies {
     compile group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.4.1'
     compile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: '2.4.1'
     compile group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-core', version: '2.4.1'
+    compile group: 'org.apache.hadoop', name: 'hadoop-mapreduce-client-jobclient', version: '2.4.1'
+
     compile group: 'com.google.guava', name: 'guava', version: '17.0'
     compile group: 'org.springframework', name: 'spring-core', version: '4.0.6.RELEASE'
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'org.apache.mrunit', name: 'mrunit', version: '1.1.0', classifier: 'hadoop2'
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
+
+    ftpAntTask("org.apache.ant:ant-commons-net:1.9.4") {
+        module("commons-net:commons-net:1.4.1") {
+            dependencies "oro:oro:2.0.8:jar"
+        }
+    }
+}
+
+def getDeployDir() {
+    return String.format('%s/build/libs', project.projectDir)
+}
+
+task ftp << {
+    ant {
+        taskdef(name: 'ftp',
+                classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+                classpath: configurations.ftpAntTask.asPath)
+        ftp(server: "10.88.106.207", userid: "hadoop", password: "hadoop6",
+            action: "send") {
+            fileset(dir: getDeployDir()) {
+                include(name: "**/*.jar")
+            }
+        }
+    }
 }
